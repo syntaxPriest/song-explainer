@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Analysis {
+  id            String   @id @default(cuid())
+  // ISRC when present, falls back to Spotify track ID
+  trackKey      String
+  promptVersion String
+  data          Json
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([trackKey, promptVersion])
+  @@index([trackKey])
+}
+
+model SavedAnalysis {
+  id        String   @id @default(cuid())
+  userId    String
+  trackKey  String
+  spotifyId String
+  trackName String
+  artist    String
+  imageUrl  String?
+  savedAt   DateTime @default(now())
+
+  @@unique([userId, trackKey])
+  @@index([userId])
+}
