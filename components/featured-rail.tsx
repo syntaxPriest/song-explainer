@@ -60,22 +60,7 @@ function FeaturedCard({ track }: { track: FeaturedTrack }) {
       href={`/song/${track.id}`}
       className="group relative block focus:outline-none"
     >
-      {/* Halo layer: a wider, heavily-blurred copy of the cover sits
-          behind the artwork. Always visible, brightens on hover.
-          Lives in its own positioned wrapper so it can extend past the
-          art without affecting layout flow. */}
       <div className="relative aspect-square">
-        {track.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={track.imageUrl}
-            alt=""
-            aria-hidden
-            className="pointer-events-none absolute -inset-4 -z-10 h-[calc(100%+2rem)] w-[calc(100%+2rem)] rounded-[2rem] object-cover opacity-55 blur-2xl transition-[opacity,transform,filter] duration-500 group-hover:-inset-6 group-hover:opacity-90 group-hover:blur-3xl"
-            style={{ filter: "saturate(180%)" }}
-          />
-        ) : null}
-
         <div className="relative h-full w-full overflow-hidden rounded-2xl shadow-[0_30px_60px_-25px_rgba(0,0,0,0.75)] ring-1 ring-white/8 transition-transform duration-500 will-change-transform group-hover:-translate-y-1.5 group-hover:scale-[1.02]">
           {track.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
