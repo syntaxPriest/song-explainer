@@ -211,7 +211,7 @@ function SelectableLyrics({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.15 }}
-            className="sticky top-2 z-10 mb-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-card)]/95 px-4 py-2 backdrop-blur"
+            className="sticky top-2 z-10 mb-3 flex flex-wrap items-center justify-between gap-3 rounded-full border border-[color:var(--glass-border-strong)] bg-[color:var(--glass-bg-strong)] px-4 py-2 shadow-[inset_0_1px_0_var(--glass-highlight),0_0_0_1px_var(--glass-edge),0_12px_40px_-12px_rgba(0,0,0,0.7)] backdrop-blur-2xl"
           >
             <p className="text-sm text-[color:var(--color-muted-foreground)]">
               {selectionLabel}
@@ -234,15 +234,15 @@ function SelectableLyrics({
         ) : null}
       </AnimatePresence>
 
-      <div className="rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-card)]">
+      <div className="rounded-2xl border border-[color:var(--glass-border)] bg-[color:var(--glass-bg)] shadow-[inset_0_1px_0_var(--glass-highlight),0_0_0_1px_var(--glass-edge),0_20px_40px_-24px_rgba(0,0,0,0.6)] backdrop-blur-xl">
         {!synced ? (
-          <p className="px-4 pt-3 text-xs text-[color:var(--color-muted-foreground)]">
+          <p className="px-5 pt-4 text-xs text-[color:var(--color-muted-foreground)]">
             No synced timing — plain lyrics. Selection + explain still work.
           </p>
         ) : null}
         <ol
           ref={containerRef}
-          className="max-h-[480px] space-y-1 overflow-y-auto px-4 py-4"
+          className="max-h-[520px] space-y-0.5 overflow-y-auto px-3 py-4 [mask-image:linear-gradient(180deg,transparent,black_5%,black_95%,transparent)]"
         >
           {lines.map((line, idx) => {
             const isActive = synced && idx === currentIndex;
@@ -259,17 +259,23 @@ function SelectableLyrics({
                   type="button"
                   onClick={(e) => handleLineClick(idx, e)}
                   className={
-                    "block w-full rounded-md px-3 py-1.5 text-left transition-colors " +
+                    "block w-full rounded-xl px-4 py-2 text-left transition-[background-color,color,box-shadow,transform] duration-200 " +
                     (isSelected
-                      ? "bg-[color:var(--palette-primary,var(--color-primary))]/25 text-[color:var(--color-foreground)] ring-1 ring-[color:var(--palette-primary,var(--color-primary))]/50"
+                      ? "bg-[color-mix(in_oklab,var(--palette-primary,var(--color-primary))_28%,transparent)] text-[color:var(--color-foreground)] shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--palette-primary,var(--color-primary))_60%,transparent),0_4px_12px_-4px_color-mix(in_oklab,var(--palette-primary,var(--color-primary))_50%,transparent)]"
                       : isActive
-                        ? "bg-[color:var(--color-muted)] text-[color:var(--color-foreground)]"
-                        : "text-[color:var(--color-muted-foreground)] hover:bg-[color:var(--color-muted)]/40 hover:text-[color:var(--color-foreground)]")
+                        ? "bg-[color:var(--glass-bg-strong)] text-[color:var(--color-foreground)] shadow-[inset_0_1px_0_var(--glass-highlight)]"
+                        : "text-[color:var(--color-muted-foreground)] hover:bg-[color:var(--glass-bg)] hover:text-[color:var(--color-foreground)]")
                   }
                   aria-current={isActive ? "true" : undefined}
                   aria-pressed={isSelected || undefined}
                 >
-                  <span className={isActive ? "text-lg font-medium" : "text-base"}>
+                  <span
+                    className={
+                      isActive
+                        ? "text-lg font-semibold tracking-tight"
+                        : "text-base"
+                    }
+                  >
                     {text || "♪"}
                   </span>
                 </button>
@@ -278,7 +284,7 @@ function SelectableLyrics({
           })}
         </ol>
         {synced ? (
-          <p className="px-4 pb-3 text-xs text-[color:var(--color-muted-foreground)]">
+          <p className="px-5 pb-3 text-xs text-[color:var(--color-muted-foreground)]">
             Tap a line to seek. Tap a second line to extend a selection, then “Explain selection”.
           </p>
         ) : null}

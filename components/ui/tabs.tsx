@@ -14,7 +14,8 @@ export const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-11 items-center justify-start gap-1 overflow-x-auto rounded-lg bg-[color:var(--color-muted)] p-1 text-[color:var(--color-muted-foreground)]",
+      // Glass pill bar — frosted, hairline outer border, inner highlight.
+      "inline-flex h-12 items-center justify-start gap-1 overflow-x-auto rounded-full border border-[color:var(--glass-border)] bg-[color:var(--glass-bg)] p-1.5 text-[color:var(--color-muted-foreground)] shadow-[inset_0_1px_0_var(--glass-highlight),0_0_0_1px_var(--glass-edge)] backdrop-blur-xl",
       className,
     )}
     {...props}
@@ -29,7 +30,10 @@ export const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-ring)] disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-[color:var(--color-background)] data-[state=active]:text-[color:var(--color-foreground)] data-[state=active]:shadow",
+      "relative inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition-[color,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-ring)] disabled:pointer-events-none disabled:opacity-50",
+      // Active state: tinted by extracted palette + soft glow.
+      "data-[state=active]:bg-[color-mix(in_oklab,var(--palette-primary,var(--color-primary))_22%,transparent)] data-[state=active]:text-[color:var(--color-foreground)] data-[state=active]:shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--palette-primary,var(--color-primary))_40%,transparent),0_4px_12px_-6px_color-mix(in_oklab,var(--palette-primary,var(--color-primary))_60%,transparent)]",
+      "hover:text-[color:var(--color-foreground)]",
       className,
     )}
     {...props}

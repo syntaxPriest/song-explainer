@@ -118,7 +118,7 @@ export default async function SongPage({
               artist={artistDisplay}
             />
           </div>
-          <aside className="order-first lg:order-last lg:sticky lg:top-[22rem]">
+          <aside className="order-first lg:order-last lg:sticky lg:top-[20.5rem]">
             <SongPlayer />
           </aside>
         </MotionFadeIn>

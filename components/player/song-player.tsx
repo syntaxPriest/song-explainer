@@ -22,9 +22,9 @@ export function SongPlayer() {
     <div
       role="region"
       aria-label="Spotify player"
-      className="overflow-hidden rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-card)] shadow-lg"
+      className="overflow-hidden rounded-2xl border border-[color:var(--glass-border)] bg-[color:var(--glass-bg)] p-1 shadow-[inset_0_1px_0_var(--glass-highlight),0_0_0_1px_var(--glass-edge),0_30px_60px_-20px_rgba(0,0,0,0.7)] backdrop-blur-xl"
     >
-      <div ref={ref} className="min-h-[352px]" />
+      <div ref={ref} className="min-h-[352px] overflow-hidden rounded-xl" />
     </div>
   );
 }

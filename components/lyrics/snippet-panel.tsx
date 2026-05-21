@@ -58,15 +58,17 @@ export function SnippetPanel({
             role="dialog"
             aria-modal="true"
             aria-label="Passage explanation"
-            className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-[color:var(--color-border)] bg-[color:var(--color-background)] shadow-2xl"
+            className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-[color:var(--glass-border-strong)] bg-[color:var(--color-background)]/85 shadow-[inset_1px_0_0_var(--glass-highlight),-30px_0_60px_-10px_rgba(0,0,0,0.7)] backdrop-blur-2xl"
           >
-            <header className="flex items-center justify-between border-b border-[color:var(--color-border)] px-5 py-4">
-              <h2 className="text-base font-semibold">What this means</h2>
+            <header className="flex items-center justify-between border-b border-[color:var(--glass-border)] px-5 py-4">
+              <h2 className="text-base font-semibold tracking-tight">
+                What this means
+              </h2>
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[color:var(--color-muted-foreground)] transition-colors hover:bg-[color:var(--color-muted)] hover:text-[color:var(--color-foreground)]"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--color-muted-foreground)] transition-colors hover:bg-[color:var(--glass-bg-strong)] hover:text-[color:var(--color-foreground)]"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>
