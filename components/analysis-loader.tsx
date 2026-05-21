@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { Loader2, RotateCcw } from "lucide-react";
+import { FileQuestion, Loader2, RotateCcw } from "lucide-react";
 
 import { AnalysisTabs, type SpotifyRec } from "@/components/analysis-tabs";
 import {
@@ -14,6 +15,7 @@ import { AnalysisSchema, type Analysis } from "@/lib/schemas";
 type State =
   | { status: "loading" }
   | { status: "ready"; analysis: Analysis; cached: boolean }
+  | { status: "no-lyrics"; title: string; artist: string }
   | { status: "error"; message: string };
 
 export function AnalysisLoader({
@@ -50,10 +52,21 @@ export function AnalysisLoader({
         });
         const data = (await res.json().catch(() => ({}))) as {
           error?: string;
+          code?: string;
+          title?: string;
+          artist?: string;
           analysis?: unknown;
           cached?: boolean;
         };
         if (!res.ok) {
+          if (data.code === "LYRICS_NOT_FOUND" && !cancelled) {
+            setState({
+              status: "no-lyrics",
+              title: data.title ?? title,
+              artist: data.artist ?? artist,
+            });
+            return;
+          }
           throw new Error(data.error ?? `Analyze failed (${res.status})`);
         }
         const analysis = AnalysisSchema.parse(data.analysis);
@@ -105,10 +118,51 @@ export function AnalysisLoader({
     return () => {
       cancelled = true;
     };
-  }, [id, attempt]);
+  }, [id, attempt, title, artist]);
 
   if (state.status === "loading") {
     return <AnalysisSkeleton />;
+  }
+
+  if (state.status === "no-lyrics") {
+    return (
+      <div className="rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-8">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--color-muted)]">
+          <FileQuestion
+            className="h-6 w-6 text-[color:var(--color-muted-foreground)]"
+            aria-hidden
+          />
+        </div>
+        <h2 className="mt-5 text-xl font-semibold tracking-tight">
+          No lyrics for this song
+        </h2>
+        <p className="mt-2 text-sm text-[color:var(--color-muted-foreground)]">
+          We couldn’t find lyrics for{" "}
+          <span className="text-[color:var(--color-foreground)]">
+            {state.title}
+          </span>{" "}
+          by{" "}
+          <span className="text-[color:var(--color-foreground)]">
+            {state.artist}
+          </span>
+          . This usually means the track is instrumental, very recently
+          released, or not yet indexed by our lyrics partners.
+        </p>
+        <p className="mt-3 text-xs text-[color:var(--color-muted-foreground)]">
+          Lyrics power the analysis, so we can’t generate themes or a
+          line-by-line breakdown without them.
+        </p>
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <Button size="sm" variant="glass" onClick={retry}>
+            <RotateCcw className="h-4 w-4" aria-hidden />
+            Check again
+          </Button>
+          <Button asChild size="sm" variant="ghost">
+            <Link href="/">Try another song</Link>
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   if (state.status === "error") {

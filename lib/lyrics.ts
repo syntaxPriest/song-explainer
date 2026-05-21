@@ -15,6 +15,24 @@ export type LyricsResult = {
 };
 
 /**
+ * Thrown when every configured lyrics provider returns nothing usable.
+ * Distinct from generic failures (auth, rate limits, network) so the API
+ * layer can surface a clean 404 + the client can render a tailored
+ * "no lyrics for this song" state instead of the generic error card.
+ */
+export class LyricsNotFoundError extends Error {
+  readonly code = "LYRICS_NOT_FOUND" as const;
+  constructor(
+    readonly title: string,
+    readonly artist: string,
+    readonly providerErrors: string[],
+  ) {
+    super(`No lyrics available for "${title}" by ${artist}`);
+    this.name = "LyricsNotFoundError";
+  }
+}
+
+/**
  * Tries each configured lyrics provider in order and returns the first one
  * that produces usable text. Resilient against any single provider failing
  * (Musixmatch coverage gaps, Genius HTML changes, LRCLib misses).
@@ -72,9 +90,5 @@ export async function getLyrics(
     errors.push(`lrclib: ${err instanceof Error ? err.message : err}`);
   }
 
-  throw new Error(
-    `Could not find lyrics for "${title}" by ${artist}. Tried: ${errors.join(
-      " | ",
-    )}`,
-  );
+  throw new LyricsNotFoundError(title, artist, errors);
 }

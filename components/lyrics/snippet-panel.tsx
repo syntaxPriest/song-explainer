@@ -83,7 +83,7 @@ export function SnippetPanel({
                 {state?.status === "loading" ? (
                   <div className="inline-flex items-center gap-2 text-sm text-[color:var(--color-muted-foreground)]">
                     <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                    Asking the model…
+                    Generating explanation...
                   </div>
                 ) : null}
 

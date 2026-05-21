@@ -62,9 +62,16 @@ export async function POST(req: Request) {
         );
       }
       case "free-text": {
-        const results = await searchTracks(parsedInput.query, 1);
-        track = results[0] ?? null;
-        break;
+        // Free-text search always returns candidates — same-name tracks
+        // and remasters/live versions mean we can't safely auto-pick.
+        const results = await searchTracks(parsedInput.query, 8);
+        if (results.length === 0) {
+          return NextResponse.json(
+            { error: "No tracks found for that search." },
+            { status: 404 },
+          );
+        }
+        return NextResponse.json({ candidates: results.map(toSummary) });
       }
     }
 
@@ -72,15 +79,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
     }
 
-    return NextResponse.json({
-      id: track.id,
-      isrc: track.external_ids?.isrc ?? null,
-      name: track.name,
-      artist: track.artists.map((a) => a.name).join(", "),
-      album: track.album.name,
-      releaseDate: track.album.release_date,
-      image: track.album.images[0]?.url ?? null,
-    });
+    return NextResponse.json({ track: toSummary(track) });
   } catch (err) {
     const message =
       err instanceof Error ? err.message : "Unexpected error resolving input";
@@ -90,4 +89,19 @@ export async function POST(req: Request) {
       { status: isAuth ? 503 : 500 },
     );
   }
+}
+
+function toSummary(track: SpotifyTrack) {
+  const images = track.album.images;
+  return {
+    id: track.id,
+    isrc: track.external_ids?.isrc ?? null,
+    name: track.name,
+    artist: track.artists.map((a) => a.name).join(", "),
+    album: track.album.name,
+    releaseYear: track.album.release_date.slice(0, 4),
+    // Prefer the smallest variant for a thumbnail; fall back to whatever's there.
+    image:
+      images[images.length - 1]?.url ?? images[0]?.url ?? null,
+  };
 }

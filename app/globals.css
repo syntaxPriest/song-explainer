@@ -10,9 +10,12 @@
   --color-border: oklch(0.22 0.015 270);
   --color-card: oklch(0.13 0.015 270);
   --color-card-foreground: oklch(0.97 0.01 270);
-  --color-primary: oklch(0.78 0.18 330);
-  --color-primary-foreground: oklch(0.15 0.02 330);
-  --color-ring: oklch(0.78 0.18 330);
+  /* Warm gold brand. Most surfaces resolve --palette-primary first (the
+     per-song color extracted from album art) and fall back to this on
+     pages without a palette — e.g. the landing page. */
+  --color-primary: oklch(0.82 0.14 85);
+  --color-primary-foreground: oklch(0.20 0.03 85);
+  --color-ring: oklch(0.82 0.14 85);
 
   /* Glass surface tokens — used by .glass utility and card components. */
   --glass-bg: rgba(255, 255, 255, 0.035);

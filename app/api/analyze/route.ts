@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 
 import { getOrCreateAnalysis } from "@/lib/analysis";
+import { LyricsNotFoundError } from "@/lib/lyrics";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -46,6 +47,22 @@ export async function POST(req: Request) {
       trackKey: result.trackKey,
     });
   } catch (err) {
+    if (err instanceof LyricsNotFoundError) {
+      // Detailed provider errors go to the server log; the client gets
+      // a clean payload it can pattern-match to render a tailored state.
+      console.warn(
+        `[analyze] lyrics not found for "${err.title}" by ${err.artist}: ${err.providerErrors.join(" | ")}`,
+      );
+      return NextResponse.json(
+        {
+          error: `We couldn't find lyrics for "${err.title}" by ${err.artist}.`,
+          code: err.code,
+          title: err.title,
+          artist: err.artist,
+        },
+        { status: 404 },
+      );
+    }
     const message = err instanceof Error ? err.message : "Analysis failed";
     const status = inferStatus(message);
     console.error("[analyze] error:", message);

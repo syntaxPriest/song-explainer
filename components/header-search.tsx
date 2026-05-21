@@ -21,10 +21,20 @@ export function HeaderSearch() {
         body: JSON.stringify({ input: trimmed }),
       });
       if (!res.ok) throw new Error(`Resolve failed (${res.status})`);
-      const data = (await res.json()) as { id: string };
+      // The header is too cramped for a candidate picker. For free-text
+      // we pick the top match; for URL/ISRC the API returns a single
+      // `track`. The main search box on the homepage shows the full
+      // picker for proper disambiguation.
+      const data = (await res.json()) as
+        | { track: { id: string } }
+        | { candidates: { id: string }[] };
+      const id =
+        "track" in data ? data.track.id : data.candidates[0]?.id ?? null;
+      if (!id) throw new Error("No match");
       setValue("");
-      router.push(`/song/${data.id}`);
-    } catch {
+      router.push(`/song/${id}`);
+    } catch (err) {
+      console.error("[header-search]", err);
       setPending(false);
     }
   }

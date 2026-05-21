@@ -13,7 +13,7 @@ export default async function LandingPage() {
   const featured = await getFeaturedTracks().catch(() => []);
 
   return (
-    <main className="relative min-h-[calc(100vh-4rem)]">
+    <main className="relative flex-1">
       {/* Layered atmospherics: a soft gold wash from the top, a warm
           honey/amber bloom off-center, and a pale champagne highlight
           above the headline. Anchored to the viewport (not the content
@@ -43,7 +43,7 @@ export default async function LandingPage() {
               className="block bg-clip-text text-transparent"
               style={{
                 backgroundImage:
-                  "linear-gradient(120deg, oklch(0.88 0.16 330), oklch(0.78 0.18 290), oklch(0.85 0.18 350))",
+                  "linear-gradient(120deg, oklch(0.92 0.12 95), oklch(0.80 0.15 70), oklch(0.88 0.13 90))",
               }}
             >
               actually about?
